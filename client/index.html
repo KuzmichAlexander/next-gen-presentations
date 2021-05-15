@@ -3,18 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="client/style.css">
 </head>
 <body>
     <div id="server-time"></div>
-<script>
-    const HOST = location.origin.replace(/^http/, 'ws')
-    const ws = new WebSocket(HOST);
-    let el;
-
-    ws.onmessage = function (event) {
-        el = document.getElementById('server-time');
-        el.innerHTML = 'Server time: ' + event.data;
-    };
-</script>
+    <script src="client/js.js"></script>
 </body>
 </html>

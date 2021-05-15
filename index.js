@@ -5,8 +5,11 @@ const INDEX = '/client/index.html';
 const { Server } = require('ws');
 
 const server = express()
+    .use('/client', express.static('client'))
     .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
     .listen(PORT, () => console.log(`Listening on ${PORT}`));
+
+
 
 const wss = new Server({ server });
 
