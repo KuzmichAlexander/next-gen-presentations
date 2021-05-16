@@ -58,12 +58,3 @@ function accessCodeParser(code) {
 
 const remoteCode = 'qqq';
 const watcherCode = 'www';
-
-// setInterval(() => {
-//     wss.clients.forEach((client) => {
-//         client.send(new Date().toTimeString());
-//     });
-// }, 1000);
-
-
-

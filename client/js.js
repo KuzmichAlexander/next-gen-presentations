@@ -29,7 +29,7 @@ function createModal() {
     const input = document.createElement('input');
     input.classList.add('modal-input');
     input.placeholder = '4RR4e33iwrwe3$$';
-    input.value = 'qqq';
+    // input.value = 'qqq';
     form.appendChild(input);
     input.focus();
     input.addEventListener('input', clearWarnMessage);
@@ -68,7 +68,7 @@ function createModal() {
             default:
                 throw new Error('This client type is not defined');
         }
-        console.log(data);
+        // console.log(data);
     }
 }
 
