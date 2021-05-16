@@ -1,8 +1,15 @@
 const HOST = location.origin.replace(/^http/, 'ws')
-const ws = new WebSocket(HOST);
+const socket = new WebSocket(HOST);
 let el;
 
-ws.onmessage = function (event) {
+socket.onmessage = function (event) {
     el = document.getElementById('server-time');
-    el.innerHTML = 'Server time: ' + event.data;
+    el.innerHTML = event.data;
 };
+
+document.addEventListener('click', () => {
+    const message = {
+        command: 'next'
+    }
+    socket.send(JSON.stringify(message));
+})
