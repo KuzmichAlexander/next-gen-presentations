@@ -32,4 +32,4 @@ class PresentationState {
     }
 }
 
-module.exports = PresentationState
+module.exports = PresentationState;
