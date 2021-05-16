@@ -8,7 +8,7 @@ class PresentationState {
     }
 
     #prevFrame() {
-        this.#currentFrame -= 1;
+        this.#currentFrame = Math.max(0, this.#currentFrame - 1);
     }
 
     commandHandler(command) {

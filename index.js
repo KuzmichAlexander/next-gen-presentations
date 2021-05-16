@@ -2,7 +2,7 @@ const express = require("express");
 const PORT = process.env.PORT || 3000;
 const INDEX = '/client/index.html';
 const PresentationModel = require('./PresentationModel/PresentationState');
-const clientType = require("./utils/ClientTypes");
+const clientTypes = require("./utils/ClientTypes");
 
 const state = new PresentationModel();
 
@@ -14,8 +14,10 @@ const server = express()
     .post('/accesscode', (req, res) => {
         const {code} = req.body;
         const clientType = accessCodeParser(code);
-        // console.log(code, clientType);
-        res.send({clientType});
+        let message = clientType === clientTypes.unknown ? 'Неверный код доступа' : 'success';
+
+        console.log(code, clientType, message);
+        res.send({clientType, message});
     })
     .use((req, res) => {
         res.sendFile(INDEX, { root: __dirname })
@@ -26,6 +28,8 @@ const server = express()
 const wss = new Server({ server });
 
 wss.on('connection', (ws) => {
+    broadcast();
+
     ws.on('message', (message) => {
         const {command} = JSON.parse(message);
         state.commandHandler(command);
@@ -44,11 +48,11 @@ function broadcast () {
 function accessCodeParser(code) {
     switch (code) {
         case remoteCode:
-            return clientType.remote;
+            return clientTypes.remote;
         case watcherCode:
-            return clientType.watcher;
+            return clientTypes.watcher;
         default:
-            return clientType.unknown;
+            return clientTypes.unknown;
     }
 }
 
