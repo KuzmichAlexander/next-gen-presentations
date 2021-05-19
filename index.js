@@ -3,6 +3,7 @@ const PORT = process.env.PORT || 3000;
 const INDEX = '/client/index.html';
 const PresentationModel = require('./PresentationModel/PresentationState');
 const clientTypes = require("./utils/ClientTypes");
+const testArray = require("./utils/consts");
 
 const state = new PresentationModel();
 
@@ -16,8 +17,10 @@ const server = express()
         const clientType = accessCodeParser(code);
         let message = clientType === clientTypes.unknown ? 'Неверный код доступа' : 'success';
 
-        console.log(code, clientType, message);
         res.send({clientType, message});
+    })
+    .get('/presentationSlides/:id', (req, res) => {
+        res.send(JSON.stringify(testArray))
     })
     .use((req, res) => {
         res.sendFile(INDEX, { root: __dirname })

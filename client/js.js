@@ -1,12 +1,26 @@
 const HOST = location.origin.replace(/^http/, 'ws')
+let socket;
+
+function socketConnect() {
+    socket = new WebSocket(HOST);
+}
 
 function setRemoteController () {
-    const socket = new WebSocket(HOST);
+    socketConnect();
+    renderSlideCounter();
+
     socket.onmessage = function (event) {
-        document.getElementById('current-frame').innerHTML = `Текущий слайд: ${event.data}`;
+        const {data: currSlide} = event;
+        document.getElementById('current-frame').innerHTML = `Текущий слайд: ${currSlide}`;
     };
 
     drawRemote(socket);
+}
+
+function renderSlideCounter() {
+    const currentSlideCounter = document.createElement('div');
+    currentSlideCounter.id = 'current-frame';
+    document.body.appendChild(currentSlideCounter);
 }
 
 function createModal() {
@@ -61,6 +75,9 @@ function createModal() {
                 setRemoteController();
                 break;
             case "watcher":
+                const {data: slides} = await axios.get('/presentationSlides/0');
+                closeModal();
+                renderSlides(slides);
                 break;
             case "unknown":
                 setWarnMessage(modal, data.message);
@@ -68,8 +85,28 @@ function createModal() {
             default:
                 throw new Error('This client type is not defined');
         }
-        // console.log(data);
     }
+}
+
+function renderSlides(slides) {
+    socketConnect();
+
+    socket.onmessage = function (event) {
+        const {data: currSlide} = event;
+        window.location.hash = currSlide;
+    };
+
+    const slidesContainer = document.createElement('div');
+    slidesContainer.classList.add('slides-container');
+    slides.forEach((slideImage, index) => {
+        const slide = document.createElement('div');
+        slide.classList.add('presentation-slide');
+        slide.id = index;
+        slide.style.backgroundColor = `rgb(${Math.trunc(Math.random() * 255)} ${Math.trunc(Math.random() * 255)} ${Math.trunc(Math.random() * 255)})`
+        //slide.style.backgroundImage = `url(${slideImage})`;
+        slidesContainer.appendChild(slide);
+    });
+    document.body.appendChild(slidesContainer);
 }
 
 function setWarnMessage(ctx, message) {
